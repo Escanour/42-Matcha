@@ -1,0 +1,188 @@
+{% extends 'nono.html' %}
+
+
+{% block content %}
+
+<main class="page landing-page">
+    <section class="clean-block clean-hero"
+        style="background-image:url(&quot;/static/bm/img/tech/3810.jpg&quot;);color:rgba(231, 214, 201, 0.75);">
+        <div class="text">
+            <form class="form-inline" method="POST" action="" style="margin-top: 10%; margin-left: 15%;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                   
+                <div class="row">
+                <div class="form-check">
+                        <div class="col">
+                    <label>AGE</label>
+                    <input type="text" class="form-control" value="{{from_age}}" name="from_age" placeholder="From">
+                    <input type="text" class="form-control" value="{{to_age}}" name="to_age" placeholder="To">
+                    </div>
+                </div>
+                </div>
+
+                <div class="w-100"></div>
+                <br>
+                <div class="row">
+                <div class="form-check">
+                        <div class="col">
+                    <label>FAME </label>
+                    <input type="text" class="form-control" name="from_fram" value="{{from_fram}}" placeholder="From">
+                    <input type="text" class="form-control" name="to_fram" value="{{to_fram}}" placeholder="To">
+                    </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <br>
+                <div class="row">
+                <div class="form-check">
+                        <div class="col">
+                    <label>Distance </label>
+                    <input type="text" class="form-control" name="from_location" value="{{from_location}}" placeholder="From">
+                    <input type="text" class="form-control" name="to_location" value="{{to_location}}" placeholder="To">
+                    </div>
+                   </div>
+                </div>
+                <div class="w-100"></div>
+                <br>
+                
+                <div class="row">
+                <div class="form-check">
+                    <label>SORT BY</label>
+                    <select class="form-control form-control-sm" name="sort" id="sort">
+                        <option>{{sort}}</option>
+                        <option>Sort</option>
+                        <option>Age</option>
+                        <option>Fram</option>
+                        <option>Location</option>
+                    </select>
+                    </div>
+                </div>
+                
+                <div class="w-25"></div>
+                <button class="btn btn-dark btn-lg" type="submit">Go !</button>
+                <p style="color: red;">{{ msg }}</p>
+            </form>
+
+
+        </div>
+    </section>
+
+
+
+    <section class="clean-block about-us">
+        <div class="container">
+            <div class="block-heading">
+                <h2 class="text-info">Its Starts Here</h2>
+            </div>
+            <div class="row justify-content-center">
+                {% for profile in profiles  %}
+
+                
+                
+
+                {% if profile.id_profile not in b and profile.id_profile not in bkr and not profile.img0 == 'default.png'%}
+                {% set time = profile.timestamp%}
+                {% set time = time.strftime("%d-%a-%H:%M") %}
+
+                <div class="col-sm-6 col-lg-4">
+                    <div class="card clean-card text-center"><img class="card-img-top w-100 d-block"
+                            src="{{url_for('static', filename='img/' + profile['img0'])}}">
+                        <div class="card-body info">
+                            <a href="{{ url_for('user', user=profile['id_profile']) }}">
+                                {% if profile.username in users %}
+                                <h4 class="card-title">@{{ profile['username']}} 😎<small style="color: green;">online</small></h4>
+                                {% else %}
+                                <h4 class="card-title">@{{ profile['username']}} 💤  </h4><small style="color: red;">offline: </small><small style="color: black;">{{time}}</small>
+                                {% endif %}
+                            </a>
+                        
+                            <h2 class="card-text">{{profile.name}} {{profile['surname']}}</h2>
+                            <!-- <p class="card-text">Dist : {{profile.lat | distance(profile.lon)}}</p> -->
+                            <p class="card-text">Dist : {{profile.km | round(2)}} km</p>
+                            <p class="card-text">City : {{profile.city}}</p>
+                            <p class="card-text">Age : {{profile.age }}</p>
+                            <p class="card-text">Gender : {{profile.gender}}</p>
+                         
+
+                            {% set fam = profile.fram | int %}
+                            {% if fam < 200 and fam >= 0%}
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            {% elif fam < 500 and fam >= 200 %}
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            {% elif fam < 1000 and fam >= 500 %}
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            {% elif fam >= 1000 %}
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            {% endif %}
+
+                            <p class="card-text">Fame : {{profile['fram']}}</p>
+
+                            {% set tags = profile['tags'].split(',') %}
+                            {% for tag in tags %}
+                            #{{tag}}
+                            {% endfor %}
+                            <br>
+                            {%if profile.id_profile in s%}
+                            <button type="button" class="btn btn-danger active"><a class="unlikebtn"
+                                    userid="{{profile['username']}}" style="color: white;"
+                                    href="{{ url_for('like', id_profile=profile['id_profile'], action='unlike') }}">Unlike</a></button>
+                            {%else%}
+                            <button type="button" class="btn btn-primary active"><a class="likebtn"
+                                    userid="{{profile['username']}}" style="color: white;"
+                                    href="{{ url_for('like', id_profile=profile['id_profile'], action='like') }}">Like</a></button>
+                            {%endif%}
+                            
+                        </div>
+                    
+                    </div>
+                </div>
+
+
+
+
+     
+                {% endif %}
+                {% endfor%}
+            </div>
+        </div>
+        <div class="container">
+            <ul class="pagination">
+                {% if not page == 1%}
+                <li class="page-item"><a class="page-link" href="{{url_for('home', page=page-1, from_age=from_age, to_age=to_age, from_fram=from_fram, to_fram=to_fram, from_location=from_location, to_location=to_location, sort=sort)}}">Previous</a></li>
+                {% endif %}
+                <li class="page-item"><a class="page-link" href="{{url_for('home', page=page+1, from_age=from_age, to_age=to_age, from_fram=from_fram, to_fram=to_fram, from_location=from_location, to_location=to_location, sort=sort)}}">Next</a></li>
+              </ul>
+        </div>
+        </div>
+    </section>
+</main>
+<br>
+
+
+<script src="{{ url_for('static', filename='bm/js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bm/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+<script src="{{ url_for('static', filename='bm/js/smoothproducts.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bm/js/theme.js') }}"></script>
+<!-- <script id="bs-live-reload" data-sseport="51630" data-lastchange="1578073956337"
+    src="static/bm/js/livereload.js"></script> -->
+
+
+
+
+
+
+
+
+
+{% endblock %}

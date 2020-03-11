@@ -1,0 +1,306 @@
+{% extends 'nono.html' %}
+
+
+{% block content %}
+{% set time = profile.timestamp%}
+{% set time = time.strftime("%d-%a-%H:%M") %}
+<style>
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      background-image: linear-gradient(#5D7078 20%,#E7D6C9);
+     
+    }
+    
+    </style>
+<link rel="stylesheet" type="text/css" href="static/profile.css">
+
+
+
+<div class="container emp-profile">
+
+    <div class="row">
+        <div class="col-md-4">
+
+            <div class="profile-img">
+                <div class="profile-img">
+                    <p class="card-text">Dist : {{profile.lat | distance(profile.lon) }}</p>
+                {% set fam = profile.fram | int %}
+                {% if fam < 200 and fam >= 0%}
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                {% elif fam < 500 and fam >= 200 %}
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                {% elif fam < 1000 and fam >= 500 %}
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                {% elif fam >= 1000 %}
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                {% endif %}
+                </div>
+
+
+                {% if not l == None and like == None%}
+                <p style="color: brown;">{{profile.username}} liked you </p>
+                {% endif %}
+                <img src="{{url_for('static', filename='img/' + profile['img0'])}}" alt="">
+                <div class="profile-img">
+                    <button type="button" class="btn btn-warning" style="margin-top:5px;"> <a class="reportbtn"
+                            userid="{{ profile['username'] }}" style="color: white;"
+                            href="{{url_for('report', id_profile=profile['id_profile'])}}">Report as Fake</a></button>
+                </div>
+                {% if profile['id_profile']==like['id_dst']%}
+                <button type="button" class="btn btn-danger active" style="margin-top:5px;"><a class="unlikebtn"
+                        userid="{{profile['username']}}"  style="color: white;"
+                        href="{{ url_for('like_action', id_profile=profile['id_profile'], action='unlike') }}">Unlike</a></button>
+                {%else%}
+                <button type="button" class="btn btn-primary active" style="margin-top:5px;"><a class="likebtn" userid="{{profile['username']}}"
+                        style="color: white;"
+                        href="{{ url_for('like_action', id_profile=profile['id_profile'], action='like') }}">Like</a></button>
+                {% endif %}
+                {% if profile['id_profile']==like['id_dst'] and session['id']==match['id_dst'] %}
+                <button type="button" class="btn btn-info" style="margin-top:5px;"><a id="chat" style="color: white;"
+                        href="{{url_for('chat', user=profile['username'])}}">chat</a></button>
+                {% endif %}
+                <button type="button" class="btn btn-danger" style="margin-top:5px;"> <a class="blockbtn" userid="{{ profile['username'] }}"
+                        style="color: white;"
+                        href="{{url_for('block', id_profile=profile['id_profile'])}}">Block</a></button>
+            </div>
+
+
+
+
+
+        </div>
+        <div class="col-md-6">
+            <div class="profile-head">
+                <h5>
+                    {{profile['name']}} {{profile['surname']}}
+                    {% if profile.username in users %}
+                    <small style="color: green;">😎online</small>
+                    {% else %}
+                    <small style="color: red;">💤offline: </small><small style="color: black;">{{time}}</small>
+                    {% endif %}
+                </h5>
+                <h6>
+                    {{profile['bio']}}
+                </h6>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                            aria-controls="home" aria-selected="true">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pic-tab" data-toggle="tab" href="#pic" role="tab" aria-controls="pic"
+                            aria-selected="false">View pic</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+
+        <div class="col-md-8">
+            <div class="tab-content profile-tab" id="myTabContent">
+                <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Username :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>@{{ profile['username']}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Fullname :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{profile['name']}} {{profile['surname']}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Age :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{ profile.age }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Gender :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{ profile.gender }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Preference :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{ profile.preferences }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Location :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{ profile.city }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Tags :</label>
+                        </div>
+                        <div class="col-md-6">
+                            {% set tags = profile['tags'].split(',') %}
+                            <p>{% for tag in tags %}
+                                #{{tag}}
+                                {% endfor %}</p>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- ============================================================================PPPPIIIIIICCCCc================================================================ -->
+
+                <div class="tab-pane fade" id="pic" role="tabpanel" aria-labelledby="pic-tab">
+                    <div class="col-md-6">
+                        <div class="profile-img">
+                            <img src="{{url_for('static', filename='img/' + profile['img1'])}}" alt="">
+
+                        </div>
+                        <br>
+                        <div class="profile-img">
+                            <img src="{{url_for('static', filename='img/' + profile['img2'])}}" alt="">
+
+                        </div>
+                        <br>
+                        <div class="profile-img">
+                            <img src="{{url_for('static', filename='img/' + profile['img3'])}}" alt="">
+
+                        </div>
+                        <br>
+                        <div class="profile-img">
+                            <img src="{{url_for('static', filename='img/' + profile['img4'])}}" alt="">
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====================================MAP CARD========================================= -->
+                <br>
+                <div class="d-none d-sm-block mb-5 pb-4">
+                    <div id="map" style="height: 480px;"></div>
+                    <script>
+                      function initMap() {
+                       
+                        var myLatlng = new google.maps.LatLng("{{profile.lat}}","{{profile.lon}}");
+                        var myOptions = {
+                          zoom: 12,
+                          center: myLatlng,
+                          mapTypeId: google.maps.MapTypeId.ROADMAP
+                        }
+                        map = new google.maps.Map(document.getElementById("map"), myOptions);
+                        var marker = new google.maps.Marker({
+                          position: myLatlng,
+                          map: map,
+                          title: "Fast marker"
+                        });
+                      }
+                    //   google.maps.event.addDomListener(window, 'load', initialize);
+                    </script>
+                    <script
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2gJtaDT29wyGqEPFyu7N_Kp8EpV7qdmA&callback=initMap"></script>
+                  </div>
+                  <!-- ===================================================================================================== -->
+
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="{{ url_for('static', filename='jquery-flexdatalist-2.2.4/jquery.flexdatalist.min.js') }}"></script>
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"
+    integrity="sha256-bQmrZe4yPnQrLTY+1gYylfNMBuGfnT/HKsCGX+9Xuqo=" crossorigin="anonymous"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        var private_socket = io('http://127.0.0.1:5000/private')
+
+        private_socket.on('connect', function () {
+
+            private_socket.emit('username', "{{me.username}}");
+
+        });
+
+
+
+
+        private_socket.emit('visite', { 'visited': '{{me.username}}', 'visiter': "{{profile.username}}" });
+
+        $(".likebtn").click(function (e) {
+            var username = e.target.attributes.userid.value;
+
+            private_socket.emit('liked', { 'liker': '{{me.username}}', 'liked': username });
+        });
+
+        $(".unlikebtn").click(function (e) {
+            var username = e.target.attributes.userid.value;
+
+            private_socket.emit('unliked', { 'unliker': '{{me.username}}', 'unliked': username });
+        });
+
+        $(".blockbtn").click(function (e) {
+            var username = e.target.attributes.userid.value;
+
+            private_socket.emit('block', { 'blocker': '{{ me.username }}', 'blocked': username });
+        });
+
+        $(".reportbtn").click(function (e) {
+            var username = e.target.attributes.userid.value;
+
+            private_socket.emit('report', { 'reporter': '{{ me.username }}', 'reported': username });
+        });
+
+
+
+
+
+
+    });
+
+</script>
+
+
+{% endblock %}

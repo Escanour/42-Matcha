@@ -1,0 +1,83 @@
+<html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Matcha</title>
+    <link rel="shortcut icon" type="image/x-icon"
+        href="{{ url_for('static', filename='bm/img/tech/myfolio-logo.png')}}">
+    <link rel="stylesheet" href="static/bm/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bm/fonts/simple-line-icons.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bm/css/smoothproducts.css') }}">
+
+    
+
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="/"><img src="static/img/myfolio-logo.png" height="50" width="50"></a>
+            <!-- <div class="navbar-collapse collapse" id="navcol-1" style=""> -->
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="{{ url_for('login') }}">Login</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="{{ url_for('about') }}">About-Us</a></li>
+                </ul>
+            <!-- </div> -->
+        </div>
+    </nav>
+    <main class="page landing-page">
+        <section class="clean-block clean-hero" style="background-image:url(&quot;static/bm/img/tech/3810.jpg&quot;);color:rgba(231, 214, 201, 0.75);">
+            <div class="text">
+                <h2>Welcome to MATCHA</h2>
+                <p>We recognize that we are all human. We take interest in and embrace each other’s individuality. We stay true to who we are, stand up for what we believe in, and are always mindful of others. We deeply value our humanity – it inspires us to be real with one another and tolerant and accepting of our differences.
+
+                    We always default to honesty and are candid and transparent in all that we do. This authenticity allows us to inspire one another and makes our work more meaningful, interesting and fun..</p><button class="btn btn-outline-dark btn-lg" type="button" ><a class="nav-link active" href="register"> Get Start</a></button></div>
+        </section>
+       
+       
+        
+        <section class="clean-block about-us">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Its Starts Here</h2>
+                </div>
+                
+                <div class="row justify-content-center">
+                {% for profile in profiles %}
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="card clean-card text-center"><img class="card-img-top w-100 d-block" src="{{url_for('static', filename='img/' + profile['img0'])}}">
+                            <div class="card-body info">
+                                <h3 class="card-title">@{{ profile['username']}}</h3>
+                                <h4 class="card-text">{{profile.name}} {{profile['surname']}}</h4>
+                                <p class="card-text">{{ profile.bio }}</p>
+                                <h5 style="color: brown;" class="card-text">{{ profile.fram }}</h5>
+                              
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>    
+        </section>
+    </main>
+    <br>
+    <footer class="page-footer dark">
+       
+        <div class="footer-copyright">
+            <p>© 2020 Copyright, Made by Srazik & Aessaid</p>
+        </div>
+    </footer>
+
+  
+    
+    
+    <!-- <script id="bs-live-reload" data-sseport="51630" data-lastchange="1578073956337" src="static/bm/js/livereload.js"></script> -->
+
+
+</body>
+
+
+</html>
+
+
+

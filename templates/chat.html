@@ -1,0 +1,689 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Matcha</title>
+    <link rel="shortcut icon" type="image/x-icon"
+        href="{{ url_for('static', filename='bm/img/tech/myfolio-logo.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bm/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bm/fonts/simple-line-icons.min.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href=" {{ url_for('static', filename='bm/css/smoothproducts.css')}} ">
+    <link href="{{ url_for('static', filename='jquery-flexdatalist-2.2.4/jquery.flexdatalist.min.css') }}"
+        rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chat.css')}} ">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/toastmejs@latest/dist/css/toastme.css">
+    <script src="https://unpkg.com/toastmejs@latest/dist/js/toastme.min.js"></script>
+
+
+    <!-- =========================notif======================= -->
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='notf.css')}}">
+    <!-- <script src="{{ url_for('static', filename='notf.js')}}"></script> -->
+    <link href="https://use.fontawesome.com/48bbc759d5.css" media="all" rel="stylesheet">
+
+    <style>
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: black;
+            color: white;
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body class="loggedin">
+
+
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="{{url_for('home')}}"><img
+                    src="{{ url_for('static', filename='bm/img/tech/myfolio-logo.png')}}" height="50"
+                    width="50"></a><button data-toggle="collapse" class="navbar-toggler collapsed"
+                data-target="#navcol-1" aria-expanded="false"><span class="sr-only">Toggle navigation</span><span
+                    class="navbar-toggler-icon"></span></button>
+            <div class="navbar-collapse collapse" id="navcol-1" style="">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link active"
+                            href="{{ url_for('home') }}">Home</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active"
+                            href="{{ url_for('search') }}">Search</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active"
+                            href="{{url_for('friends')}}">Friends</a></li>
+
+                    <div class="dropdown nav-button notifications-button hidden-sm-down">
+
+                        <a id='n' ana="{{me['id_profile']}}" diali="{{me.username}}"
+                            class="btn btn-secondary dropdown-toggle" href="#" id="notifications-dropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i ana="{{me['id_profile']}}" diali="{{me.username}}" id="notificationsIcon"
+                                class="fa fa-bell" aria-hidden="true"></i>
+                            <span ana="{{me['id_profile']}}" diali="{{me.username}}" id="badge"
+                                class="badge badge-danger" style="display: inline-block;">{{num}}</span>
+                        </a>
+
+                        <!-- NOTIFICATIONS -->
+                        <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
+                            <h6 class="dropdown-header">Notifications</h6>
+
+                            <!-- CHARGEMENT -->
+                            <a id="notificationsLoader" class="dropdown-item dropdown-notification" href="#"
+                                ana="{{me['id_profile']}}" diali="{{me.username}}" style="display: none;">
+                                <p class="notification-solo text-center"><i id="notificationsIcon"
+                                        class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i> Chargement des
+                                    dernières
+                                    notifications...</p>
+                            </a>
+
+                            <div id="notificationsContainer" class="notifications-container">
+                                <!-- NOTIFICATION -->
+
+                                <div id='new_notf'>
+
+                                </div>
+
+                                <div class="container"> ___________________________________________________</div>
+                                {% for nf in notf %}
+
+                                <a class="dropdown-item dropdown-notification" href="{{ nf.link }}">
+                                    <div class="notification-read">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </div>
+                                    <img class="notification-img"
+                                        src="https://png.pngtree.com/png-vector/20190418/ourlarge/pngtree-vector-notification-icon-png-image_951414.jpg"
+                                        alt="Icone Notification">
+                                    <div class="notifications-body">
+                                        <p class="notification-texte">{{ nf.message }} </p>
+                                        <p class="notification-date text-muted">
+                                            <i class="fa fa-clock-o" aria-hidden="true"></i> {{nf.timestamp}}
+                                        </p>
+                                    </div>
+                                </a>
+
+                                {% endfor %}
+                            </div>
+
+                            <!-- AUCUNE NOTIFICATION -->
+                            <a id="notificationAucune" class="dropdown-item dropdown-notification" href="#"
+                                style="display: none;">
+                                <p class="notification-solo text-center">Aucune nouvelle notification</p>
+                            </a>
+
+                            <!-- TOUTES -->
+                            <a class="dropdown-item dropdown-notification-all" href="{{ url_for('notf') }}">
+                                Voir toutes les notifications
+                            </a>
+                        </div>
+                    </div>
+
+                    <li class="nav-item" role="presentation"><a class="nav-link"
+                            href="{{url_for('profile')}}">Profile</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link"
+                            href="{{url_for('blocked')}}">Blocked</a></li>
+
+
+                    <form action="{{ url_for('logout') }}" method="post">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <li class="nav-item" role="presentation"><button id="logout" class="nav-link"
+                                userid="{{me['username']}}">Logout</button>
+                        </li></form>
+
+
+                </ul>
+
+            </div>
+        </div>
+        <div id="alert"></div>
+    </nav>
+
+
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">	$(document).ready(function () {
+            $('#action_menu_btn').click(function () {
+                $('.action_menu').toggle();
+            });
+        });</script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
+
+    <div class="container-fluid h-100">
+        <div class="row justify-content-center h-100">
+
+            <div class="col-md-12 col-xl-12 chat">
+                <div class="card">
+                    <div class="card-header msg_head">
+                        <div class="d-flex bd-highlight">
+                            <div class="img_cont">
+                                <img src="{{url_for('static', filename='img/' + profile['img0'])}}"
+                                    class="rounded-circle user_img">
+                                {% if profile.username in users %}
+                                <span class="online_icon"></span>
+                                {% else %}
+                                <span class="offline_icon"></span>
+                                {% endif %}
+
+                            </div>
+                            <div class="user_info">
+                                <span>@{{ user }}</span>
+                                <p>{{ profile.bio }}</p>
+                            </div>
+                        </div>
+                        <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
+                        <div class="action_menu" style="display: none;">
+                            <ul>
+                                <li><a href="{{ url_for('user', user=profile['id_profile']) }}"><i
+                                            class="fas fa-user-circle"></i> View profile</li></a>
+
+                            </ul>
+                        </div>
+                    </div>
+
+
+                    <div class="card-body msg_card_body">
+
+                        {%for message in messages%}
+                        {% if message.sender_username == user and message.recipient_username == me['username']%}
+
+                        <div style="margin-left: 45%;">{{ message.timestamp }}</div>
+
+                        <br>
+
+                        <div id="srl" class="d-flex justify-content-start mb-5">
+                            <div class="img_cont_msg">
+                                <img src="{{url_for('static', filename='img/' + profile['img0'])}}"
+                                    class="rounded-circle user_img_msg">
+                            </div>
+                            <div class="msg_cotainer">
+                                {{message.text | decode()}}
+                                <!-- <span class="msg_time">{{ message.timestamp }}</span> -->
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if message.sender_username == me['username'] and message.recipient_username == user%}
+
+                        <div style="margin-left: 45%;">{{ message.timestamp }}</div>
+
+                        <br>
+                        <div id="srl" class="d-flex justify-content-end mb-4">
+                            <div class="msg_cotainer_send">
+
+                                {{message.text | decode()}}
+                                <!-- <span class="msg_time_send"></span> -->
+                            </div>
+                            <div class="img_cont_msg">
+                                <img src="{{url_for('static', filename='img/' + me['img0'])}}"
+                                    class="rounded-circle user_img_msg">
+                            </div>
+                        </div>
+                        {% endif %}
+                        {%endfor%}
+
+                        <!-- 8:55 AM, Today -->
+
+                        <div id="message"></div>
+
+
+
+
+                    </div>
+                    <form action="">
+                        <div class="card-footer col-xl-12">
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <span id="heart" class="input-group-text attach_btn">♥<i></i></span>
+                                </div>
+                                <input id="private_message" name="" class="form-control type_msg"
+                                    placeholder="Type your message..."></input>
+                                <div class="input-group-append">
+                                    <button><span class="input-group-text send_btn"><i
+                                                class="fas fa-location-arrow"></i></span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet"
+            id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!------ Include the above in your HEAD tag ---------->
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+            integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css"
+            href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+        <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
+
+
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"
+            integrity="sha256-bQmrZe4yPnQrLTY+1gYylfNMBuGfnT/HKsCGX+9Xuqo=" crossorigin="anonymous"></script>
+
+        <script>
+
+            //Customize your Notification  
+            const config = {
+                timeout: 5000,
+                positionY: "top", // top or bottom
+                positionX: "center", // right left, center
+                distanceY: 90, // Integer value
+                distanceX: 20, // Integer value
+                zIndex: 100, // Integer value
+                theme: "ligh", // default, ligh or  dark (leave empty for "default" theme)
+                duplicates: true // true or false - by default it's false
+            };
+
+            //Create a new Toastmejs class instance
+            const mytoast = new Toastme(config);
+
+
+            var height = 0;
+            $('div div').each(function (i, value) {
+                height += parseInt($(this).height());
+            });
+
+            height += '';
+
+            $('div').animate({ scrollTop: height });
+
+            //Call it whenever you want!
+            //mytoast.success("Hello, this is my custom notification!");
+
+            $(document).ready(function () {
+
+                var n = "{{num}}"
+
+
+
+                // $(".likebtn").on('click', function(e){
+                //   e.preventDefault();
+                //   console.log(e.target.attributes.userid.value);
+                // })
+                var private_socket = io('http://127.0.0.1:5000/private')
+
+
+                private_socket.on('connect', function () {
+                    private_socket.emit('username', "{{me.username}}");
+
+
+                });
+
+                $('#logout').click(function (e) {
+                    var username = e.target.attributes.userid.value;
+
+                    private_socket.emit('username_pop', { 'username': username });
+                })
+
+                $('#n').click(function (e) {
+                    n = 0
+                    document.getElementById("badge").innerHTML = n;
+
+                    var id_profile = e.target.attributes.ana.value;
+                    var username = e.target.attributes.diali.value;
+
+
+
+                    private_socket.emit('c_n', { 'id': id_profile, 'username': username });
+                })
+
+                $(".clearbtn").click(function (e) {
+                    var id_profile = e.target.attributes.ana.value;
+                    var username = e.target.attributes.diali.value;
+
+                    private_socket.emit('clear', { 'id': id_profile, 'username': username });
+                });
+
+                $('#badge').click(function (e) {
+                    n = 0
+                    document.getElementById("badge").innerHTML = n;
+                })
+
+
+
+
+
+
+                $(".likebtn").click(function (e) {
+                    var username = e.target.attributes.userid.value;
+
+                    private_socket.emit('liked', { 'liker': '{{me.username}}', 'liked': username });
+                });
+
+                $(".unlikebtn").click(function (e) {
+                    var username = e.target.attributes.userid.value;
+
+                    private_socket.emit('unliked', { 'unliker': '{{me.username}}', 'unliked': username });
+                });
+
+                $('#heart').click(function (e) {
+                    var dt = new Date();
+                    var time = dt.toLocaleString();
+
+                    private_socket.emit('private_message', { 'username': "{{user}}", 'id': "{{profile.id_profile}}", 'message': '❤' });
+
+                    $("#message").append(' <div class="d-flex justify-content-end mb-4">' +
+                        '<div style="margin-right: 35%;">' + time + '</div>' +
+                        '<br>' +
+                        '<div class="msg_cotainer_send">' +
+                        '❤' +
+                        '</div>' +
+                        '<div class="img_cont_msg">' +
+                        '<img src="{{url_for("static", filename="img/" + me["img0"])}}" class="rounded-circle user_img_msg">' +
+                        '</div>' +
+                        '</div>');
+
+                    $("div").animate({ scrollTop: height });
+                })
+
+
+                $('form').submit(function (e) {
+                    e.preventDefault();
+                    // var recipient = "{{user}}";
+
+
+                    $.ajax({
+                        method: "GET",
+
+                        url: "/log",
+                    }).done(function (data) {
+
+
+
+                        // private_socket.emit('check', {'username': username})
+
+                        var message_to_send = $('#private_message').val();
+
+                        if (message_to_send.length > 300 || message_to_send.length == 0) {
+                            mytoast.info("Bad msg")
+                        }
+                        else if (data != 1) { window.location.reload(true); }
+                        else {
+
+
+                            message_to_send = escapeHtml(message_to_send)
+
+                            var dt = new Date();
+                            var time = dt.toLocaleString();
+
+
+
+                            private_socket.emit('private_message', { 'username': "{{user}}", 'id': "{{profile.id_profile}}", 'message': message_to_send });
+
+
+
+
+                            $("#message").append(' <div class="d-flex justify-content-end mb-4">' +
+
+                                '<div style="margin-right: 35%;">' + time + '</div>' +
+                                '<br>' +
+                                '<div class="msg_cotainer_send">' +
+
+                                message_to_send +
+
+
+
+                                '</div>' +
+                                '<div class="img_cont_msg">' +
+                                '<img src="{{url_for("static", filename="img/" + me["img0"])}}" class="rounded-circle user_img_msg">' +
+                                '</div>' +
+                                '</div>');
+
+                            $('#private_message').val('');
+
+                            $("div").animate({ scrollTop: height });
+
+                            // $('#alert').append('<div class="alert alert-success alert-dismissible">'+
+                            //         '<a href = "#" class= "close" data - dismiss="alert" aria - label="close">'+"&times;"+'</a >'+
+                            //             '<strong>'+'Success!'+'</strong>'+' Indicates a successful or positive action.'+
+                            //             '</div > ');
+                            //return false;
+
+                        }
+                    })
+                });
+
+
+                // ==========================================================================================
+
+                function escapeHtml(str) {
+                    var map =
+                    {
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#039;'
+                    };
+                    return str.replace(/[&<>"']/g, function (m) { return map[m]; });
+                }
+
+                function decodeHtml(str) {
+                    var map =
+                    {
+                        '&amp;': '&',
+                        '&lt;': '<',
+                        '&gt;': '>',
+                        '&quot;': '"',
+                        '&#039;': "'"
+                    };
+                    return str.replace(/&amp;|&lt;|&gt;|&quot;|&#039;/g, function (m) { return map[m]; });
+                }
+
+                // ==========================================================================================
+
+                private_socket.on('new_private_message', function (msg) {
+                    n = parseInt(n) + 1
+
+                    var dt = new Date();
+                    var time = dt.toLocaleString();
+
+                    document.getElementById("badge").innerHTML = n;
+
+                    // private_socket.emit('notif', { 'username': msg['me'], 'message': msg['msg'], 'to': "{{me.username}}" });
+
+                    $("#new_notf").append('<a class="dropdown-item dropdown-notification" href=' + msg['link'] + '>' +
+                        '<div class="notification-read">' +
+                        '<i class="fa fa-times" aria-hidden="true">' + '</i>' +
+                        '</div>' +
+                        '<img class="notification-img" src="https://img.icons8.com/cotton/2x/appointment-reminders.png" alt="Icone Notification">' +
+                        '<div class="notifications-body">' +
+                        '<p class="notification-texte">' + msg['msg'] + '   💌' + '</p>' +
+                        '<p class="notification-date text-muted">' +
+                        '<i class="fa fa-clock-o" aria-hidden="true">' + '</i>' + msg['time'] +
+                        '</p>' +
+                        '</div>' +
+                        '</a>');
+
+
+                    $("div").animate({ scrollTop: height });
+
+
+
+
+                    // =================================================
+                    // mytoast.info("This is a 'default' notification")
+                    mytoast.default(msg['msg'])
+
+                    if (msg['user'] == '{{user}}') {
+
+                        $("#message").append(' <div class="d-flex justify-content-start mb-5">' +
+
+
+                            '<div class="img_cont_msg">' +
+                            '<img src="{{url_for("static", filename="img/" + profile["img0"])}}" class="rounded-circle user_img_msg">' +
+                            '</div>' +
+                            ' <div class="msg_cotainer">' +
+                            msg['message'] +
+
+                            '</div>' +
+
+
+                            '<div style="margin-left: 35%;">' + time + '</div>' +
+                            '</div>');
+                    }
+
+
+                });
+
+                // $('#send_username').on('click', function() {
+                //     private_socket.emit('username', "{{me.username}}");
+                // });
+
+                private_socket.on('like', function (msg) {
+                    n = parseInt(n) + 1
+
+                    document.getElementById("badge").innerHTML = n;
+
+                    $("#new_notf").append('<a class="dropdown-item dropdown-notification" href=' + msg['link'] + '>' +
+                        '<div class="notification-read">' +
+                        '<i class="fa fa-times" aria-hidden="true">' + '</i>' +
+                        '</div>' +
+                        '<img class="notification-img" src="https://img.icons8.com/cotton/2x/appointment-reminders.png" alt="Icone Notification">' +
+                        '<div class="notifications-body">' +
+                        '<p class="notification-texte">' + msg['msg'] + '🔥' + '</p>' +
+                        '<p class="notification-date text-muted">' +
+                        '<i class="fa fa-clock-o" aria-hidden="true">' + '</i>' + msg['time'] +
+                        '</p>' +
+                        '</div>' +
+                        '</a>');
+
+
+                        mytoast.info(msg['msg'])
+
+
+
+
+
+                })
+
+                private_socket.on('unlike', function (msg) {
+                    n = parseInt(n) + 1
+                    window.location.reload(true);
+                    document.getElementById("badge").innerHTML = n;
+
+                    $("#new_notf").append('<a class="dropdown-item dropdown-notification" href=' + msg['link'] + '>' +
+                        '<div class="notification-read">' +
+                        '<i class="fa fa-times" aria-hidden="true">' + '</i>' +
+                        '</div>' +
+                        '<img class="notification-img" src="https://img.icons8.com/cotton/2x/appointment-reminders.png" alt="Icone Notification">' +
+                        '<div class="notifications-body">' +
+                        '<p class="notification-texte">' + msg['msg'] + '🔥' + '</p>' +
+                        '<p class="notification-date text-muted">' +
+                        '<i class="fa fa-clock-o" aria-hidden="true">' + '</i>' + msg['time'] +
+                        '</p>' +
+                        '</div>' +
+                        '</a>');
+
+                        mytoast.info(msg['msg'])
+
+
+                })
+
+                private_socket.on('vst', function (msg) {
+                    n = parseInt(n) + 1
+
+
+                    document.getElementById("badge").innerHTML = n;
+
+                    $("#new_notf").append('<a class="dropdown-item dropdown-notification" href=' + msg['link'] + '>' +
+                        '<div class="notification-read">' +
+                        '<i class="fa fa-times" aria-hidden="true">' + '</i>' +
+                        '</div>' +
+                        '<img class="notification-img" src="https://img.icons8.com/cotton/2x/appointment-reminders.png" alt="Icone Notification">' +
+                        '<div class="notifications-body">' +
+                        '<p class="notification-texte">' + msg['msg'] + '🔥' + '</p>' +
+                        '<p class="notification-date text-muted">' +
+                        '<i class="fa fa-clock-o" aria-hidden="true">' + '</i>' + msg['time'] +
+                        '</p>' +
+                        '</div>' +
+                        '</a>');
+
+                        mytoast.info(msg['msg'])
+
+
+                });
+
+                private_socket.on('blck_ntf', function (msg) {
+                    n = parseInt(n) + 1
+                    window.location.reload(true);
+                    document.getElementById("badge").innerHTML = n;
+
+                    $("#new_notf").append('<a class="dropdown-item dropdown-notification" href=' + msg['link'] + '>' +
+                        '<div class="notification-read">' +
+                        '<i class="fa fa-times" aria-hidden="true">' + '</i>' +
+                        '</div>' +
+                        '<img class="notification-img" src="https://img.icons8.com/cotton/2x/appointment-reminders.png" alt="Icone Notification">' +
+                        '<div class="notifications-body">' +
+                        '<p class="notification-texte">' + msg['msg'] + '🔥' + '</p>' +
+                        '<p class="notification-date text-muted">' +
+                        '<i class="fa fa-clock-o" aria-hidden="true">' + '</i>' + msg['time'] +
+                        '</p>' +
+                        '</div>' +
+                        '</a>');
+
+                        mytoast.error(msg['msg'])
+
+
+
+
+
+
+                })
+
+                private_socket.on('rprt_ntf', function (msg) {
+                    n = parseInt(n) + 1
+
+                    document.getElementById("badge").innerHTML = n;
+
+                    $("#new_notf").append('<a class="dropdown-item dropdown-notification" href=' + msg['link'] + '>' +
+                        '<div class="notification-read">' +
+                        '<i class="fa fa-times" aria-hidden="true">' + '</i>' +
+                        '</div>' +
+                        '<img class="notification-img" src="https://img.icons8.com/cotton/2x/appointment-reminders.png" alt="Icone Notification">' +
+                        '<div class="notifications-body">' +
+                        '<p class="notification-texte">' + msg['msg'] + '🔥' + '</p>' +
+                        '<p class="notification-date text-muted">' +
+                        '<i class="fa fa-clock-o" aria-hidden="true">' + '</i>' + msg['time'] +
+                        '</p>' +
+                        '</div>' +
+                        '</a>');
+
+                        mytoast.warning(msg['msg'])
+
+
+                })
+
+            });
+
+        </script>
+
+        <footer class="footer">
+
+            <div class="footer-copyright">
+                <p>© 2020 Copyright, Made by Srazik & Aessaid</p>
+            </div>
+        </footer>

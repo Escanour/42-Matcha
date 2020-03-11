@@ -1,0 +1,45 @@
+{% extends 'nono.html' %}
+
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="static/list.css">
+<div class="l-container">
+
+    <ul>
+        {% for profile in profiles%}
+        {% if profile.id_profile  in b%}
+        <li class="list" data-name="JoeBrown">
+            <!-- Profile Section -->
+            <div class="list__profile">
+                <div> <img src="{{url_for('static', filename='img/' + profile['img0'])}}"> </div>
+                <div class="list__label">
+                    <div class="list__label--header"> @{{ profile['username']}} </div>
+                    <div class="list__label--value"> {{profile.name}} {{profile['surname']}} </div>
+                </div>
+            </div>
+
+            <div class="col-xs-3 col-sm-2">
+
+                <button class="btn btn-primary pull-right"> <a style="color: white;"
+                    href="{{ url_for('deblock', id_profile=profile['id_profile']) }}">Deblock</a></button>
+            </div>
+
+        </li>
+
+    </ul>
+
+</div>
+{% endif %}
+{% endfor %}
+
+<script src="static/bm/js/jquery.min.js"></script>
+<script src="static/bm/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+<script src="static/bm/js/smoothproducts.min.js"></script>
+<script src="static/bm/js/theme.js"></script>
+
+
+
+
+
+{% endblock %}

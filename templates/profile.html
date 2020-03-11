@@ -1,0 +1,546 @@
+{% extends 'nono.html' %}
+
+
+{% block content %}
+<style>
+    html,
+    body {
+        height: 100%;
+        width: 100%;
+        background-image: linear-gradient(#5D7078 20%, #E7D6C9);
+
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="static/profile.css">
+
+
+<div class="container emp-profile">
+
+    {% if profile.checker == 0 %}
+    <h1 style="color: red;">Complete Your Profile First</h1>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="profile-img">
+                <img src="{{url_for('static', filename='img/' + profile['img0'])}}" alt="">
+                <form action="/imgz" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div class="file btn btn-lg btn-primary">
+                        Change Photo
+                        <input type="file" name="photo">
+                        <button type="submit" value="Upload" class="btn btn-warning">upload</button>
+                        <a href='imgdelz'><button type="button" class="btn btn-danger">Delete</button></a>
+                    </div>
+                </form>
+                <br><br>
+                <form action="/del_account" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <a id="del_user"></a><button type="submit" class="btn btn-danger">Delete my account</button></a></form>
+            </div>
+
+
+        </div>
+        <div class="col-md-6">
+            <div class="profile-head">
+                <h5>
+                    {{profile['name']}} {{profile['surname']}}
+                </h5>
+                <h6>
+                    {{profile['bio']}}
+                </h6>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                            aria-controls="home" aria-selected="true">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                            aria-controls="profile" aria-selected="false">Edit profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pic-tab" data-toggle="tab" href="#pic" role="tab" aria-controls="pic"
+                            aria-selected="false">Edit pic</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+
+        <div class="col-md-8">
+            <div class="tab-content profile-tab" id="myTabContent">
+                <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <p style="color: red;">{{ msg }}</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Username :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>@{{ profile['username']}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Fullname :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{profile['name']}} {{profile['surname']}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Email :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{ account['email']}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Age :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{ profile.age }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Gender :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{ profile.gender }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Preferences :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{ profile.preferences }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>City :</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{ profile.city }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Tags :</label>
+                        </div>
+                        <div class="col-md-6">
+                            {% set tags = profile['tags'].split(',') %}
+                            <p>{% for tag in tags %}
+                                #{{tag}}
+                                {% endfor %}</p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <form action="{{ url_for('profile') }}" method="post" autocomplete="off">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Username :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputUsername" placeholder="Username"
+                                    value="{{ profile.username }}" name="username">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Fullname :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputFullname" placeholder="Fullname"
+                                    value="{{ profile.name }} {{ profile.surname }}" name="full_name">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Email :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="email" class="form-control" placeholder="Email" value="{{ account.email }}"
+                                    name="email">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Age :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control" name="bday" id="bday">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Gender :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <select class="form-control form-control-sm" id="inputgender" name="gender">
+                                    <option>{{ profile.gender }}</option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Preferences :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <select class="form-control form-control-sm" name="preferences">
+                                    <option>{{ profile.preferences }}</option>
+                                    <option>Bisexual</option>
+                                    <option>Heterosexual</option>
+                                    <option>Homosexual</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>City :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="lat" value="{{ profile.lat }}"
+                                    name="lat">
+                                <input type="text" class="form-control" placeholder="lon" value="{{ profile.lon }}"
+                                    name="lon">
+
+
+                            </div><button type="button" class="btn btn-secondary" id="location-button">Get
+                                Location</button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Tags :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                
+                     
+
+
+                                <input  type="text" class="form-control" name="tags"
+                                placeholder="{{profile.tags}}" id="tags" list="browsers">
+                                <datalist id="browsers">
+                                    {% for jj in sg_tag%}
+                                    <option value="{{jj}}">
+                                    {% endfor %}...
+                                </datalist>
+
+
+                                <div class="col-md-8">
+                                    {% set tags = profile['tags'].split(',') %}
+                                    <p>{% for tag in tags %}
+                                        <b class="deletetag">#{{tag}}</b>
+                                        {% endfor %}</p>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Biography :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" name="bio" rows="3" id="bio">{{profile.bio}}</textarea>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Old Password :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="password" class="form-control" placeholder="*********************"
+                                    name="current-password">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>New Password :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="password" class="form-control" placeholder="*********************"
+                                    name="new-password">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Confirm Password :</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="password" class="form-control" placeholder="*********************"
+                                    name="new-password1">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Change</button>
+                            </div>
+                            <p style="color: red;">{{ msg }}</p>
+                        </div>
+                    </form>
+                </div>
+
+
+
+
+
+                <!-- ============================================================================PPPPIIIIIICCCCc================================================================ -->
+
+                <div class="tab-pane fade" id="pic" role="tabpanel" aria-labelledby="pic-tab">
+                    <div class="col-md-6">
+                        <div class="profile-img">
+                            <img src="{{url_for('static', filename='img/' + profile['img1'])}}" alt="">
+                            <form action="/imgo" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                                <div class="file btn btn-lg btn-primary">
+                                    Change Photo
+                                    <input type="file" name="photo">
+                                    <button type="submit" value="Upload" class="btn btn-warning">upload</button>
+                                    <a href='imgdelo'><button type="button" class="btn btn-danger">Delete</button></a>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="profile-img">
+                            <img src="{{url_for('static', filename='img/' + profile['img2'])}}" alt="">
+                            <form action="/imgt" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                                <div class="file btn btn-lg btn-primary">
+                                    Change Photo
+                                    <input type="file" name="photo">
+                                    <button type="submit" value="Upload" class="btn btn-warning">upload</button>
+                                    <a href='imgdelt'><button type="button" class="btn btn-danger">Delete</button></a>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="profile-img">
+                            <img src="{{url_for('static', filename='img/' + profile['img3'])}}" alt="">
+                            <form action="/imgth" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                                <div class="file btn btn-lg btn-primary">
+                                    Change Photo
+                                    <input type="file" name="photo">
+                                    <button type="submit" value="Upload" class="btn btn-warning">upload</button>
+                                    <a href='imgdelth'><button type="button" class="btn btn-danger">Delete</button></a>
+                                </div>
+                            </form>
+                        </div>
+
+
+                        <div class="profile-img">
+                            <img src="{{url_for('static', filename='img/' + profile['img4'])}}" alt="">
+                            <form action="/imgf" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                                <div class="file btn btn-lg btn-primary">
+                                    Change Photo
+                                    <input type="file" name="photo">
+                                    <button type="submit" value="Upload" class="btn btn-warning">upload</button>
+                                    <a href='imgdelf'><button type="button" class="btn btn-danger">Delete</button></a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- ====================================MAP CARD========================================= -->
+                <br>
+                <div class="d-none d-sm-block mb-5 pb-4">
+                    <div id="map" style="height: 480px;"></div>
+                    <script>
+                        function initMap() {
+
+                            var myLatlng = new google.maps.LatLng("{{profile.lat}}", "{{profile.lon}}");
+                            var myOptions = {
+                                zoom: 12,
+                                center: myLatlng,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                            }
+                            map = new google.maps.Map(document.getElementById("map"), myOptions);
+                            var marker = new google.maps.Marker({
+                                position: myLatlng,
+                                map: map,
+                                title: "Fast marker"
+                            });
+                        }
+                      //   google.maps.event.addDomListener(window, 'load', initialize);
+                    </script>
+                    <script
+                        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2gJtaDT29wyGqEPFyu7N_Kp8EpV7qdmA&callback=initMap"></script>
+                </div>
+                <!-- ===================================================================================================== -->
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="{{ url_for('static', filename='jquery-flexdatalist-2.2.4/jquery.flexdatalist.min.js') }}"></script>
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"
+    integrity="sha256-bQmrZe4yPnQrLTY+1gYylfNMBuGfnT/HKsCGX+9Xuqo=" crossorigin="anonymous"></script>
+
+<script>
+
+
+    $("#del_user").click(function (e) {
+        toastme.yesNoDialog({
+            title: "DELETE ACCOUNT",
+            text: "ARE YOU SURE !",
+            textConfirm: "Confirm",
+            textCancel: "Cancel",
+            showCancel: true, // true or false
+            type: "warning", // 'success', 'danger', 'warning', 'info' or 'question'
+            dark: false, // Show dark theme? 'true' or 'false'
+        }).then(function (value) {
+            if (value) {
+
+                window.location.href = "del_account";
+            } else {
+
+            }
+        });
+
+    })
+
+
+    $(document).ready(function () {
+        var private_socket = io('http://127.0.0.1:5000/private')
+
+        private_socket.on('connect', function () {
+
+            private_socket.emit('username', "{{me.username}}");
+
+
+        });
+
+        $('.deletetag').on('click', function (e) {
+            // var tag = e.target.innerText;
+            // $.post('/removeTag', {tag: tag}, function(row){
+
+            // })
+
+            $(this).hide();
+            private_socket.emit('rmv_tag', { 'tg': e.target.innerText });
+        })
+
+
+        $('#location-button').click(function () {
+
+            // if (navigator.geolocation){
+            //     navigator.geolocation.getCurrentPosition(function(position){
+            //       console.log(position);
+            //       $.get( "https://maps.googleapis.com/maps/api/geocode/json?latlng="+ position.coords.latitude 
+            //       + "," + position.coords.longitude +"&key=AIzaSyA2gJtaDT29wyGqEPFyu7N_Kp8EpV7qdmA&sensor=false", function(data) {
+            //         console.log(data.results[3].formatted_address);
+            //         private_socket.emit('google_location', {'city' : data.results[3].formatted_address});
+            //       })
+            //       })} 
+            // else {
+            //     $.get( "https://extreme-ip-lookup.com/json?", function(data){
+            //       console.log(data);
+            //     console.log('not suported');
+            // })
+            // }
+
+            navigator.permissions && navigator.permissions.query({ name: 'geolocation' }).then(function (PermissionStatus) {
+                if (PermissionStatus.state == 'granted') {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        //console.log(position);
+                        $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude
+                            + "," + position.coords.longitude + "&key=AIzaSyA2gJtaDT29wyGqEPFyu7N_Kp8EpV7qdmA&sensor=false", function (data) {
+                                // console.log(data.results[3].formatted_address);
+                                private_socket.emit('google_location', { 'lat': position.coords.latitude, 'lon': position.coords.longitude });
+                            });
+                    });
+                } else {
+
+                    $.get("https://extreme-ip-lookup.com/json", function (data) {
+                        //console.log(data);
+                        private_socket.emit('google_location', { 'lat': data['lat'], 'lon': data['lon'] });
+                        /* la géolocalisation n'est pas disponible */
+                    });
+                }
+            })
+            // if ("geolocation" in navigator) {
+            //     navigator.geolocation.getCurrentPosition(function (position) {
+            //         console.log(position);
+            //         $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude
+            //             + "," + position.coords.longitude + "&key=AIzaSyA2gJtaDT29wyGqEPFyu7N_Kp8EpV7qdmA&sensor=false", function (data) {
+            //                 console.log(data.results[3].formatted_address);
+            //                 private_socket.emit('google_location', { 'city': data.results[3].formatted_address });
+            //             });
+            //     });
+            //     /* la géolocalisation est disponible */
+            // } else {
+            //     console.log('here');
+            //     $.get("https://extreme-ip-lookup.com/json?", function (data) {
+            //         console.log(data);
+            //         console.log('not suported');
+            //         /* la géolocalisation n'est pas disponible */
+            //     });
+
+
+            // };
+
+            private_socket.on('g_rcv', function (msg) {
+                mytoast.info(msg['msg'])
+
+
+            });
+        });
+
+
+
+
+
+    });
+
+</script>
+{% endblock %}

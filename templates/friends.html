@@ -1,0 +1,47 @@
+{% extends 'nono.html' %}
+
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href=" {{ url_for('static', filename='list.css')}} ">
+<div class="l-container">
+
+  <ul>
+    {% for profile in profiles %}
+    {% if profile.id_profile  in b%}
+
+    <li class="list" data-name="JoeBrown">
+      <!-- Profile Section -->
+      <div class="list__profile">
+        <div> <img src="{{url_for('static', filename='img/' + profile['img0'])}}"> </div>
+        <div class="list__label">
+          <div class="list__label--header"> @{{ profile['username']}} </div>
+          <div class="list__label--value"> {{profile.name}} {{profile['surname']}} </div>
+        </div>
+      </div>
+
+      
+        <button class="btn btn-primary pull-right"><a id="chat" style="color: white;"
+            href="{{url_for('chat', user=profile['username'])}}">Chat</a></button>
+
+
+        <button class="btn btn-outline-primary pull-right"> <a style="color: red;"
+            href="{{url_for('user', user=profile['id_profile'])}}">Profile</a></button>
+
+     
+    </li>
+
+  </ul>
+
+</div>
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
+
+{% endif %}
+{% endfor %}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+{% endblock %}

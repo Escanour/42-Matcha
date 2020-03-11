@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" type="image/x-icon"
+        href="{{ url_for('static', filename='bm/img/tech/myfolio-logo.png')}}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Sedgwick+Ave+Display&display=swap" rel="stylesheet">
+
+  <title>Matcha</title>
+  
+</head>
+
+<body>
+  <div class="login-card">
+    <div class="login-card-content">
+      <div class="header">
+        <div class="logo">
+          <div><a href="{{ url_for('login') }}"><img src="static/img/myfolio-logo.png" alt="Smiley face" height="150"
+                width="140"></a>
+          </div>
+        </div>
+        <br><br>
+        <h2>Mat<span class="highlight">cha</span></h2>
+
+      </div>
+      <form action="{{ url_for('login') }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form">
+
+          <div class="form-field username">
+            <div class="icon">
+              <i class="far fa-user"></i>
+            </div>
+            <input name="username" type="text" placeholder="Username" id="username">
+          </div>
+          <div class="form-field password">
+            <div class="icon">
+              <i class="far fa-lock"></i>
+            </div>
+            <input name="password" type="password" placeholder="Password" id="password">
+          </div>
+          <div class="msg">{{ msg }}</div>
+          <button type="submit" value="login">Login</button>
+          <div>
+            Don't have an account? <a href="{{ url_for('register') }}">Sign Up Now</a>
+          </div>
+        </div>
+    </div>
+    <div class="login-card-footer">
+      <a href="forgot_password">Forgot password?</a>
+
+    </div>
+    </form>
+  </div>
+
+</body>
+
+</html>

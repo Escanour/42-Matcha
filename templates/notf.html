@@ -1,0 +1,48 @@
+{% extends 'nono.html' %}
+
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href=" {{ url_for('static', filename='list.css')}} ">
+<div class="l-container">
+
+
+
+
+  <ul>
+    <li class="list" data-name="JoeBrown">
+      <button type="button" class="btn btn-outline-danger"><a class="clearbtn" ana="{{profile['id_profile']}}" diali="{{profile.username}}"
+          style="color: red;" href="{{ url_for('notf') }}">✘</a></button>
+    </li>
+
+    {% for nf in notf %}
+
+
+    <li class="list" data-name="JoeBrown">
+      <!-- Profile Section -->
+      <div class="list__profile">
+        <div> <img
+            src="https://png.pngtree.com/png-vector/20190418/ourlarge/pngtree-vector-notification-icon-png-image_951414.jpg">
+        </div>
+        <div class="list__label">
+          <div class="list__label--header"> {{nf.timestamp}} </div>
+          <div class="list__label--value"> {{ nf['message']}} </div>
+        </div>
+      </div>
+
+
+      <button type="button" class="btn btn-info"><a id="chat" style="color: white;" href="{{ nf.link }}">Go</a></button>
+    </li>
+
+  </ul>
+
+</div>
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
+
+
+{% endfor %}
+<script src="static/bm/bootstrap/js/bootstrap.min.js"></script>
+
+{% endblock %}
